@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Assistant with Ring Effect</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2a005c, #400086, #210047);
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            animation: fadeIn 2s ease-out;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Particle background */
+        /* @keyframes particles {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(-1000px, -1000px); }
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png') repeat;
+            opacity: 0.05;
+            animation: particles 10s infinite linear;
+        } */
+
+        h1 {
+            font-size: 3.8rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(0, 0, 0, 0.6), 0 0 30px #ff00ff;
+            animation: fadeInUp 1.8s ease-out;
+        }
+
+        /* Ring button styles */
+        .ring-button {
+            width: 300px;
+            height: 300px;
+            background: transparent;
+            border: 10px solid rgba(31, 37, 219, 0.8); /* Ring effect */
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            
+            
+           
+            
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+      animation: rotate 8s linear infinite;
+        }
+        .ring-button::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent);
+      animation: pulse 6s linear infinite;
+    }
+    .ring-button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      border: 2px dashed rgba(255, 255, 255, 0.7);
+      animation: wave 4s linear infinite;
+    }
+    @keyframes rotate {
+      0% {
+        transform: rotate(-60deg);
+      }
+      100% {
+        transform: rotate(140deg);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.3);
+        opacity: 0.5;
+      }
+    }
+
+    @keyframes wave {
+      0% {
+        transform: scale(0.9);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(0.9);
+      }
+    }
+        
+
+
+        /* Special effect */
+        .special-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            animation: specialEffectPulse 2s infinite ease-out;
+        }
+
+        @keyframes specialEffectPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0.5;
+            }
+        }
+
+        #response {
+            margin-top: 30px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: #98c009;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s ease-in-out;
+        }
+
+        /* Glowing effect */
+        #response.glow {
+            text-shadow: 0 0 20px #f1c40f, 0 0 30px #f1c40f, 0 0 50px #f1c40f;
+            color: #f1c40f;
+        }
+
+        /* Input box styling */
+        .user-input {
+            padding: 12px;
+            font-size: 1.3rem;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            background: transparent;
+            color: #fff;
+            width: 320px;
+            text-align: center;
+            margin-top: 20px;
+            outline: none;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .user-input:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 8px rgba(243, 221, 21, 0.6);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.5rem;
+                margin-bottom: 30px;
+            }
+
+            .ring-button {
+                width: 160px;
+                height: 160px;
+            }
+
+            #response {
+                font-size: 1.4rem;
+            }
+
+            .user-input {
+                width: 250px;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Particles -->
+    <div class="particles"></div>
+
+    <h1> Voice Assistant</h1>
+
+    <!-- Ring button -->
+    <div class="ring-button" onclick="startRecognition()">
+        <div id="special-effect" class="special-effect"></div>
+    </div>
+
+    <!-- Response section -->
+    <p id="response"></p>
+
+    <!-- Input box for typing commands -->
+    <input type="text" id="user-input" class="user-input" placeholder="Type your command here..." onkeyup="checkInput(event)">
+    <script type="text/javascript" src="/eel.js"></script>
+    <script>
+        var recognition;
+
+        // Start speech recognition
+        function startRecognition() {
+            // Show special effect when clicked
+            var specialEffect = document.getElementById('special-effect');
+            specialEffect.style.opacity = '1'; // Make the effect visible
+
+            // Stop any ongoing recognition before starting a new one
+            if (recognition && recognition.stop) {
+                recognition.stop();
+            }
+
+            // Initialize SpeechRecognition
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+
+            recognition.onstart = function() {
+                console.log("Listening...");
+            };
+
+            recognition.onresult = function(event) {
+                var transcript = event.results[0][0].transcript;
+                document.getElementById('response').innerHTML = "You said: " + transcript;
+                document.getElementById('response').classList.add("glow");
+                handleCommand(transcript);
+            };
+
+            recognition.onerror = function(event) {
+                console.error("Speech recognition error:", event.error);
+            };
+
+            recognition.onend = function() {
+                // Hide the special effect when recognition ends
+                var specialEffect = document.getElementById('special-effect');
+                specialEffect.style.opacity = '0'; // Hide the effect when assistant is done speaking
+            };
+
+            recognition.start();
+        }
+
+        // Expose the DisplayMessage function to Python
+// Expose the DisplayMessage function to Python
+eel.expose(DisplayMessage);
+
+function DisplayMessage(message) {
+    console.log("Displaying message:", message);  // Debugging line
+    document.getElementById("response").innerText = message;
+    speakText(message);  // Use JavaScript's speech synthesis
+}
+
+function speakText(text) {
+    var utterance = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utterance);
+}
+
+
+        // Handle the voice command
+        function handleCommand(command) {
+            command = command.toLowerCase();
+           // Check if the command contains "translate to"
+    // Check if the command contains "translate to"
+    if (command.includes("translate to")) {
+        let targetLanguage = command.split("translate to ")[1].trim(); // Get language
+        
+        // Ask the user for the text to translate
+        DisplayMessage("Please type the text you want to translate.");
+        
+        // Save the target language for later use when the user inputs text
+        document.getElementById('user-input').setAttribute('data-target-language', targetLanguage);
+        
+    } 
+    else if (command.includes("hi") || command.includes("hello") || command.includes("how are you")) {
+    eel.handle_greeting(command);  // Handle greeting requests
+}
+else if (command.includes("greet me")) {
+    eel.greet_based_on_time();  // Personalized greeting
+}
+
+            else if (command.includes("time")) {
+                // DisplayMessage("The current time is " + new Date().toLocaleTimeString());
+                eel.tell_time()
+            } else if (command.includes("joke")) {
+                eel.tell_joke();
+                
+            } else if (command.includes("play song")) {
+                
+                
+                eel.play_song(); 
+            } else if (command.includes("shutdown")) {
+                eel.shutdown_system();
+            } else if (command.includes("restart")) {
+                eel.restart_system();
+            } else if (command.includes("guess the number")) {
+                eel.start_guess_the_number();
+            } else if (command.includes("guess")) {
+                let guess = parseInt(command.split(' ')[1]);
+                eel.guess_number(guess);
+            } 
+            else if (command.includes("open google")) {
+                 eel.open_google();
+             } else if (command.includes("open youtube")) {
+                      eel.open_youtube();
+               }
+               else if (command.includes("open chatgpt")) {
+                      eel.open_chatgpt();
+               }
+               else if (command.includes("chat") || command.includes("talk")) {
+    eel.initiate_chat();  // Initiate random conversation from Python
+}
+else if (command.includes("tell fact")) {
+    eel.tell_fun_fact();  // Tell a fun fact
+}
+
+               else if (command.includes("tell me about")) {
+    let topic = command.split("tell me about")[1].trim();
+    if (topic.length > 0) {
+        eel.tell_about(topic);  // Fetch information about the topic from Wikipedia
+    } else {
+        DisplayMessage("Please provide a topic you'd like to know about.");
+            }
+              }
+              else if (command.includes("let's talk") || command.includes("talk to me") || command.includes("speak with me")) {
+    DisplayMessage("Sure, I'm here to chat! What would you like to talk about?");
+    // Allow the user to continue typing freely, and handle each input with the conversation handler
+    document.getElementById('user-input').addEventListener('keyup', function (e) {
+        if (e.key === "Enter" || e.keyCode === 13) {
+            let userMessage = document.getElementById('user-input').value;
+            eel.have_conversation(userMessage);  // Send user input to Python for conversation
+        }
+    });
+} 
+
+ 
+               else if (command.includes("weather in")) {
+    let city = command.split('in ')[1];
+    eel.get_weather(city);  // Fetch weather info from Python
+}
+               else if (command.includes("calculate")) {
+        let expression = command.replace("calculate", "").trim(); // Extract expression from the command
+        eel.calculate_expression(expression);  // Call Python function for calculation
+    }
+
+            else {
+                DisplayMessage("Sorry, I didn't understand that command.");
+            }
+        }
+
+
+
+        function checkInput(event) {
+    // Check if Enter key (key code 13) is pressed
+    if (event.key === "Enter" || event.keyCode === 13) {
+        var command = document.getElementById('user-input').value;  // Get the input text
+        
+        if (command.trim() !== "") {
+            // Check if translation mode is active (i.e., data-target-language is set)
+            var targetLanguage = document.getElementById('user-input').getAttribute('data-target-language');
+            
+            if (targetLanguage) {
+                // If translation mode is active, call the Python translate_text function
+                eel.translate_text(command, targetLanguage);  // Pass the text and target language to Python
+                
+                // Clear the target language data and reset the input box
+                document.getElementById('user-input').removeAttribute('data-target-language');
+                document.getElementById('user-input').value = ''; // Clear the input field after translation
+            } else {
+                handleCommand(command);  // Process other commands as usual
+            }
+            document.getElementById('user-input').value = ''; 
+        }
+       
+    }
+}
+
+    </script>
+</body>
+</html>
