@@ -6,8 +6,7 @@ import webbrowser
 import os
 import threading
 import time
-
-
+from googletrans import Translator
 
 # Initialize pyttsx3 engine for speech synthesis
 engine = pyttsx3.init()
@@ -136,12 +135,12 @@ def open_chatgpt():
 @eel.expose
 def translate_text(text, target_language='en'):
     try:
-        from deep_translator import GoogleTranslator
-        translated_text = GoogleTranslator(source='auto', target=target_language).translate(text)
-        eel.DisplayMessage(f"Translated text: {translated_text}")
+        translator = Translator()
+        translated = translator.translate(text, dest=target_language)
+        translated_text = translated.text
+        eel.DisplayMessage(f"Translated text: {translated_text}")  # Send translated text back to frontend
     except Exception as e:
         eel.DisplayMessage(f"Error translating text: {e}")
-
 import requests
 
 API_KEY = "c0388506af3a1ab5d10d03e31e1cfc6a"  # Replace with your OpenWeatherMap API key
